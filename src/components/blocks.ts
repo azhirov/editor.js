@@ -2,6 +2,7 @@ import * as _ from './utils';
 import $ from './dom';
 import Block, { BlockToolAPI } from './block';
 import {MoveEvent, MoveEventDetail} from '../../types/tools';
+import {type} from 'os';
 
 /**
  * @class Blocks
@@ -143,6 +144,17 @@ export default class Blocks {
      */
     this.blocks[second] = this.blocks[first];
     this.blocks[first] = secondBlock;
+  }
+
+  public update(indexes: number[]): void {
+    indexes.forEach((i) => {
+      const block = this.blocks[i];
+      block.tunes.forEach((tune) => {
+        if (typeof tune.update === 'function') {
+          tune.update(i);
+        }
+      });
+    });
   }
 
   /**
@@ -306,6 +318,7 @@ export default class Blocks {
    * @param {String} type
    * @param {MoveEventDetail} detail
    */
+  // tslint:disable-next-line:no-shadowed-variable
   private composeBlockEvent(type: string, detail: MoveEventDetail): MoveEvent {
     return new CustomEvent(type, {
         detail,

@@ -10,6 +10,7 @@ export interface BlockTune {
    * @return {HTMLElement}
    */
   render(): HTMLElement;
+  update?(index?: number): void;
 }
 
 /**

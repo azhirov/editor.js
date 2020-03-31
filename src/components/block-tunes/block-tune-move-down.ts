@@ -14,7 +14,8 @@ export default class MoveDownTune implements BlockTune {
    * @see {api.md}
    */
   private readonly api: API;
-
+  private isDisabled: boolean;
+  private element: HTMLElement;
   /**
    * Styles
    * @type {{wrapper: string}}
@@ -40,6 +41,8 @@ export default class MoveDownTune implements BlockTune {
   public render() {
     const moveDownButton = $.make('div', [this.CSS.button, this.CSS.wrapper], {});
     moveDownButton.appendChild($.svg('arrow-down', 14, 14));
+    this.element = moveDownButton;
+    this.update();
     this.api.listeners.on(
       moveDownButton,
       'click',
@@ -96,5 +99,23 @@ export default class MoveDownTune implements BlockTune {
 
     /** Hide the Tooltip */
     this.api.tooltip.hide();
+  }
+
+  public update(newIndex?: number): void {
+    if (!this.element) {
+      return;
+    }
+    if (newIndex === undefined) {
+      newIndex = this.api.blocks.getCurrentBlockIndex();
+    }
+    const lastIndex = this.api.blocks.getBlocksCount() - 1;
+    if (newIndex < lastIndex) {
+      const nextBlock = this.api.blocks.getBlockInstanceByIndex(newIndex + 1);
+      this.isDisabled = nextBlock.settings.locked;
+    } else {
+      this.isDisabled = newIndex === lastIndex;
+    }
+
+    this.element.style.display = (this.isDisabled) ? 'none' : null;
   }
 }

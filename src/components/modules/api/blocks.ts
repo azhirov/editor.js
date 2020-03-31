@@ -3,6 +3,7 @@ import Module from '../../__module';
 import {Blocks} from '../../../../types/api';
 import {BlockToolData, OutputData, ToolConfig} from '../../../../types';
 import * as _ from './../../utils';
+import Block from '../../block';
 
 /**
  * @class BlocksAPI
@@ -21,6 +22,8 @@ export default class BlocksAPI extends Module {
       delete: () => this.delete(),
       swap: (fromIndex: number, toIndex: number) => this.swap(fromIndex, toIndex),
       move: (toIndex: number, fromIndex?: number) => this.move(toIndex, fromIndex),
+      getBlockInstanceByIndex: (index: number) => this.getBlockInstanceByIndex(index),
+      getBlockIndex: (block: Block) => this.getBlockIndex(block),
       getBlockByIndex: (index: number) => this.getBlockByIndex(index),
       getCurrentBlockIndex: () => this.getCurrentBlockIndex(),
       getBlocksCount: () => this.getBlocksCount(),
@@ -55,6 +58,26 @@ export default class BlocksAPI extends Module {
   public getBlockByIndex(index: number): HTMLElement {
     const block = this.Editor.BlockManager.getBlockByIndex(index);
     return block.holder;
+  }
+
+  /**
+   * Returns Block instance by Block index
+   * @param {Number} index
+   *
+   * @return {HTMLElement}
+   */
+  public getBlockInstanceByIndex(index: number): Block {
+    return this.Editor.BlockManager.getBlockByIndex(index);
+  }
+
+  /**
+   * Returns Block instance by Block index
+   * @param {Block} block
+   *
+   * @return {number}
+   */
+  public getBlockIndex(block: Block): number {
+    return this.Editor.BlockManager.getBlockIndex(block);
   }
 
   /**

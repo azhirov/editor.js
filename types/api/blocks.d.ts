@@ -1,5 +1,6 @@
 import {OutputData} from '../data-formats/output-data';
 import {BlockToolData, ToolConfig} from "../tools";
+import Block from "../../src/components/block";
 
 /**
  * Describes methods to manipulate with Editor`s blocks
@@ -50,6 +51,20 @@ export interface Blocks {
    * @returns {HTMLElement}
    */
   getBlockByIndex(index: number): HTMLElement;
+
+  /**
+   * Returns Block instance by Block index
+   * @param {number} index
+   * @returns {HTMLElement}
+   */
+  getBlockInstanceByIndex(index: number): Block;
+
+  /**
+   * Returns Block instance by Block index
+   * @param {Block} block
+   * @returns {number}
+   */
+  getBlockIndex(block: Block): number;
 
   /**
    * Returns current Block index

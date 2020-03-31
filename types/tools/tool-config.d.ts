@@ -4,6 +4,7 @@
 interface ToolConfigInteface {
     deletable?: boolean;
     moveable?: boolean;
+    locked?: boolean;
     [key: string]: any;
 }
 

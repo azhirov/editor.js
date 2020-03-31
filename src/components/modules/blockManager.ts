@@ -206,6 +206,13 @@ export default class BlockManager extends Module {
    * @return {Block}
    */
   public composeBlock(toolName: string, data: BlockToolData = {}, settings: ToolConfig = {}): Block {
+    settings = {
+      deletable: true,
+      moveable: true,
+      locked: false,
+      ...settings,
+    };
+
     const toolInstance = this.Editor.Tools.construct(toolName, data) as BlockTool;
     const toolClass = this.Editor.Tools.available[toolName] as BlockToolConstructable;
     const block = new Block(toolName, toolInstance, toolClass, settings, this.Editor.API.methods);
@@ -233,11 +240,6 @@ export default class BlockManager extends Module {
     index: number = this.currentBlockIndex + 1,
     needToFocus: boolean = true,
   ): Block {
-    settings = {
-      deletable: true,
-      moveable: true,
-      ...settings,
-    };
     const block = this.composeBlock(toolName, data, settings);
 
     this._blocks[index] = block;
@@ -463,6 +465,15 @@ export default class BlockManager extends Module {
   }
 
   /**
+   * Returns Block by passed index
+   * @param {Block} block
+   * @return {number}
+   */
+  public getBlockIndex(block: Block): number {
+    return this._blocks.indexOf(block);
+  }
+
+  /**
    * Get Block instance by html element
    * @param {Node} element
    * @returns {Block}
@@ -589,6 +600,9 @@ export default class BlockManager extends Module {
 
     /** Now actual block moved so that current block index changed */
     this.currentBlockIndex = toIndex;
+
+    /** Update block settings panel */
+    this._blocks.update([toIndex, fromIndex]);
   }
 
   /**

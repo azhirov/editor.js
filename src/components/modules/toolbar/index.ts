@@ -177,6 +177,20 @@ export default class Toolbar extends Module {
     this.bindEvents();
   }
 
+  public hideSettingsToggler(): void {
+    if (!this.nodes.settingsToggler) {
+      return;
+    }
+    (this.nodes.settingsToggler as HTMLElement).style.display = 'none';
+  }
+
+  public showSettingsToggler(): void {
+    if (!this.nodes.settingsToggler) {
+      return;
+    }
+    (this.nodes.settingsToggler as HTMLElement).style.display = null;
+  }
+
   /**
    * Move Toolbar to the Current Block
    * @param {Boolean} forceClose - force close Toolbar Settings and Toolbar
@@ -189,7 +203,20 @@ export default class Toolbar extends Module {
     }
 
     const currentBlock = this.Editor.BlockManager.currentBlock.holder;
+    const currentBlockInstance = this.Editor.BlockManager.currentBlock;
 
+    if (!currentBlockInstance || (
+        currentBlockInstance.settings.locked && !currentBlockInstance.settings.deletable &&
+        (
+            !currentBlockInstance.tool ||
+            !currentBlockInstance.tool.renderSettings ||
+            !currentBlockInstance.tool.renderSettings()
+        )
+    )) {
+      this.hideSettingsToggler();
+    } else {
+      this.showSettingsToggler();
+    }
     /**
      * If no one Block selected as a Current
      */

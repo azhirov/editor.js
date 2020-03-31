@@ -500,12 +500,13 @@ export default class Block {
    */
   public makeTunes(): BlockTune[] {
     const tunesList = [];
+
+    if (!this.settings.locked) {
+      tunesList.push(MoveUpTune);
+      tunesList.push(MoveDownTune);
+    }
     if (this.settings.deletable) {
       tunesList.push(DeleteTune);
-    }
-    if (this.settings.moveable) {
-      tunesList.unshift(MoveUpTune);
-      tunesList.push(MoveDownTune);
     }
 
     // Pluck tunes list and return tune instances with passed Editor API and settings

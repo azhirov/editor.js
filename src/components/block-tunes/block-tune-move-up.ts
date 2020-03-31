@@ -15,6 +15,8 @@ export default class MoveUpTune implements BlockTune {
    */
   private readonly api: API;
 
+  private isDisabled: boolean;
+  private element: HTMLElement;
   /**
    * Styles
    * @type {{wrapper: string}}
@@ -41,6 +43,9 @@ export default class MoveUpTune implements BlockTune {
   public render(): HTMLElement {
     const moveUpButton = $.make('div', [this.CSS.button, this.CSS.wrapper], {});
     moveUpButton.appendChild($.svg('arrow-up', 14, 14));
+
+    this.element = moveUpButton;
+    this.update();
     this.api.listeners.on(
       moveUpButton,
       'click',
@@ -62,6 +67,9 @@ export default class MoveUpTune implements BlockTune {
    * @param {HTMLElement} button
    */
   public handleClick(event: MouseEvent, button: HTMLElement): void {
+    if (this.isDisabled) {
+      return;
+    }
 
     const currentBlockIndex = this.api.blocks.getCurrentBlockIndex();
 
@@ -75,6 +83,12 @@ export default class MoveUpTune implements BlockTune {
     }
 
     const currentBlockElement = this.api.blocks.getBlockByIndex(currentBlockIndex);
+
+    const previousBlock = this.api.blocks.getBlockInstanceByIndex(currentBlockIndex - 1);
+    if (previousBlock.settings.locked) {
+      return;
+    }
+
     const previousBlockElement = this.api.blocks.getBlockByIndex(currentBlockIndex - 1);
 
     /**
@@ -103,5 +117,22 @@ export default class MoveUpTune implements BlockTune {
 
     /** Hide the Tooltip */
     this.api.tooltip.hide();
+  }
+
+  public update(newIndex?: number): void {
+    if (!this.element) {
+      return;
+    }
+    if (newIndex === undefined) {
+      newIndex = this.api.blocks.getCurrentBlockIndex();
+    }
+    if (newIndex > 0) {
+      const prevBlock = this.api.blocks.getBlockInstanceByIndex(newIndex - 1);
+      this.isDisabled = prevBlock.settings.locked;
+    } else {
+      this.isDisabled = newIndex === 0;
+    }
+
+    this.element.style.display = (this.isDisabled) ? 'none' : null;
   }
 }
