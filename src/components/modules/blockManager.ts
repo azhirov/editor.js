@@ -233,6 +233,11 @@ export default class BlockManager extends Module {
     index: number = this.currentBlockIndex + 1,
     needToFocus: boolean = true,
   ): Block {
+    settings = {
+      deletable: true,
+      moveable: true,
+      ...settings,
+    };
     const block = this.composeBlock(toolName, data, settings);
 
     this._blocks[index] = block;
