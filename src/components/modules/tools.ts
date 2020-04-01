@@ -349,6 +349,7 @@ export default class Tools extends Module {
     const constructorOptions = {
       api: this.Editor.API.methods,
       config: (toolSettings[this.USER_SETTINGS.CONFIG] || {}) as ToolSettings,
+      rootConfig: this.config,
     };
 
     return new tool(constructorOptions) as InlineTool;
